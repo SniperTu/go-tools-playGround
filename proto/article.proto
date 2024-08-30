@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package pbs;
+
+import public "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+
+option (gogoproto.goproto_sizecache_all) = false;
+option (gogoproto.goproto_unkeyed_all) = false;
+option (gogoproto.goproto_unrecognized_all) = false;
+option (gogoproto.gogoproto_import) = false;
+
+service ArticleService {
+    rpc Create(Article) returns (Empty);
+    rpc List(PageParam) returns (Articles);
+    rpc Update(Article) returns (Empty);
+    rpc Delete(ArticleId) returns (Empty);
+    rpc Detail(ArticleId) returns (Article);
+}
+
+message ArticleId {
+    string id = 1;
+}
+
+message Articles {
+    repeated Article data = 1;//文章列表
+    int64 count = 2;
+}
+
+message Empty {
+}
+
+// 分页通用参数
+message PageParam {
+	int64 page = 1;
+	int64 page_size = 2;
+}
+
+message Article {
+    string id = 1 [(gogoproto.jsontag)="id",(gogoproto.moretags)="bson:\"_id,omitempty\""];  //id
+    string title = 2 [(gogoproto.jsontag)="title",(gogoproto.moretags)="bson:\"title\""]; //文章标题
+    string content = 3 [(gogoproto.jsontag)="content",(gogoproto.moretags)="bson:\"content\""]; //文章内容
+    uint32 article_type = 4 [(gogoproto.jsontag)="article_type",(gogoproto.moretags)="bson:\"article_type\""]; //文章类型 0新闻 1颁奖 2通知
+    int64 created_at = 6 [(gogoproto.jsontag)="created_at",(gogoproto.moretags)="bson:\"created_at\""]; //创建时间
+    int64 updated_at = 7 [(gogoproto.jsontag)="updated_at",(gogoproto.moretags)="bson:\"updated_at\""]; //更新时间
+    int64 deleted_at = 8 [(gogoproto.jsontag)="deleted_at",(gogoproto.moretags)="bson:\"deleted_at\""]; //删除时间
+    string cover_img = 9 [(gogoproto.jsontag)="cover_img",(gogoproto.moretags)="bson:\"cover_img\""]; //封面图
+}
